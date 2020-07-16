@@ -1,0 +1,44 @@
+{
+  "name": "clever-it-challenge",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.10.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "concurrently": "^5.2.0",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "material-table": "^1.59.0",
+    "react": "^16.13.1",
+    "react-avatar": "^3.9.6",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1"
+  },
+  "scripts": {
+    "start": "cross-env REACT_APP_ENV=TEST react-scripts start",
+    "build": "cross-env REACT_APP_ENV=PROD react-scripts build",
+    "build-k8": "cross-env REACT_APP_ENV=K8 react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
