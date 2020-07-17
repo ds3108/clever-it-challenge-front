@@ -211,13 +211,14 @@ const App = () => {
             className="user-table"
             title="Lista de usuarios de API Clever"
             columns={columns}
-            localization={{ toolbar: { searchPlaceholder: 'Buscar...' } },
+            localization={
             {
+              toolbar: { searchPlaceholder: 'Buscar...' },
               body: {
                 editRow: { deleteText: '¿Estás seguro de borrar el registro de la lista CleverIT ?' },
                 emptyDataSourceMessage: (isFetching) ? <CircularProgress /> : 'Sin información para mostrar'
-              }
-            }}
+              
+            }}}
             data={data}
             icons={tableIcons}
             editable={{

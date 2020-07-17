@@ -1,6 +1,7 @@
 {
   "name": "clever-it-challenge",
   "version": "1.0.0",
+  "author": "ignaciods.3108@gmail.com",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.10.0",
@@ -9,8 +10,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.19.2",
-    "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "material-table": "^1.59.0",
