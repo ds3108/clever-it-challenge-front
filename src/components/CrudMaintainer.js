@@ -22,30 +22,37 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '@material-ui/lab/Alert';
-import validateEmail from '../helpers/helpers';
+import {validateEmail,fetchConfig} from '../helpers/helpers';
 import apiClient from "../../src/config/config";
 
 const tableIcons = {
-  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+  Add: forwardRef((props, ref) => <AddBox {...props}   ref={ref} />),
+  Check: forwardRef((props, ref) => <Check {...props}  ref={ref} />),
   Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+  Delete: forwardRef((props, ref) => <DeleteOutline {...props}  ref={ref} />),
+  DetailPanel: forwardRef((props, ref) => <ChevronRight {...props}   ref={ref} />),
+  Edit: forwardRef((props, ref) => <Edit {...props}   ref={ref} />),
+  Export: forwardRef((props, ref) => <SaveAlt {...props}   ref={ref} />),
+  Filter: forwardRef((props, ref) => <FilterList {...props}   ref={ref} />),
+  FirstPage: forwardRef((props, ref) => <FirstPage {...props}   ref={ref} />),
+  LastPage: forwardRef((props, ref) => <LastPage {...props}   ref={ref} />),
+  NextPage: forwardRef((props, ref) => <ChevronRight {...props}   ref={ref} />),
+  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props}   ref={ref} />),
+  ResetSearch: forwardRef((props, ref) => <Clear {...props}   ref={ref} />),
+  Search: forwardRef((props, ref) => <Search {...props}   ref={ref} />),
+  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props}   ref={ref} />),
+  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props}   ref={ref} />),
+  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props}   ref={ref} />)
 };
 
-
+/**
+ * CRUD Component
+ *
+ * @version        1.0.0 - 16 Jul 2020
+ * @author         Ignacio Aedo - DS3108
+ * @returns {JSX} : CrudMaintainer Component
+ *
+ */
 const CrudMaintainer = () => {
 
   const columns = [
@@ -68,13 +75,7 @@ const CrudMaintainer = () => {
   const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
-    const myInit = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    fetch(`${apiClient.users}/`, myInit)
+    fetch(`${apiClient.users}/`, fetchConfig('GET'))
       .then(res => res.json())
       .then(data => {
         setData(data);
@@ -104,14 +105,8 @@ const CrudMaintainer = () => {
     }
 
     if (errorList.length < 1) {
-      const myInit = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newData),
-      };
-      fetch(`${apiClient.users}/${id}`, myInit)
+      
+      fetch(`${apiClient.users}/${id}`, fetchConfig('PUT',newData))
         .then(resObj => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -149,14 +144,7 @@ const CrudMaintainer = () => {
     }
 
     if (errorList.length < 1) { //no error
-      const myInit = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newData),
-      };
-      fetch(`${apiClient.users}/`, myInit)
+      fetch(`${apiClient.users}/`, fetchConfig('POST',newData))
         .then(res => res.json())
         .then(resObj => {
           let dataToAdd = [...data];
@@ -186,13 +174,7 @@ const CrudMaintainer = () => {
 
   const handleRowDelete = (oldData, resolve) => {
     const { id, tableData } = oldData;
-    const myInit = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    fetch(`${apiClient.users}/${id}`, myInit)
+    fetch(`${apiClient.users}/${id}`, fetchConfig('DELETE'))
       .then(resObj => {
         const dataDelete = [...data];
         const index = tableData.id;
@@ -212,7 +194,6 @@ const CrudMaintainer = () => {
 
   return (
     <div className="App">
-
       <Grid container spacing={2}>
         <Grid item xs={2}></Grid>
         <Grid item xs={12} md={8}>
@@ -224,9 +205,27 @@ const CrudMaintainer = () => {
             {
               toolbar: { searchPlaceholder: 'Buscar...' },
               body: {
-                editRow: { deleteText: '¿Estás seguro de borrar el registro de la lista CleverIT ?' },
-                emptyDataSourceMessage: (isFetching) ? <CircularProgress /> : 'Sin información para mostrar'
-              
+                addTooltip: 'Agregar',
+                deleteTooltip: 'Borrar',
+                editTooltip:'Editar',
+                editRow: { 
+                  deleteText: '¿Estás seguro de borrar el registro de la lista CleverIT ?',
+                  cancelTooltip: 'Cancelar',
+                  saveTooltip: 'Guardar' },
+                emptyDataSourceMessage: (isFetching) ? <CircularProgress /> : 'Sin información para mostrar',
+            },
+            pagination:{
+              labelDisplayedRows:'{from} - {to} de {count}',
+              labelRowsSelect:'filas',
+              labelRowsPerPage:'Filas por página',
+              firstAriaLabel:'Primera página',
+              firstTooltip:'Primera página',
+              previousAriaLabel:'Pagina anterior',
+              previousTooltip:'Pagina anterior',
+              nextAriaLabel:'Siguiente página',
+              nextTooltip:'Siguiente página',
+              lastAriaLabel:'Última página',
+              lastTooltip:'Última página',
             }}}
             data={data}
             icons={tableIcons}
