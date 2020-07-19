@@ -1,31 +1,19 @@
-# Use node Image
-FROM node:12.16 AS react
-# Set dir and copy files
-WORKDIR /frontend
-COPY ./src/main/resources/frontend .
-# Install modules
-RUN npm install
-# Build
+######### Challenge Clever IT #########
+###########    FRONT         ##########
+
+FROM node:12.16  as builder
+# build environment
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+COPY . ./
 RUN npm run build
 
-
-# Use maven image
-FROM maven AS spring
-# Set dir and copy files
-WORKDIR /app
-COPY . .
-# Eliminamos la carpeta de frontend
-RUN rm -Rf ./src/main/resources/frontend
-# Copiamos la version ya compilada de React
-COPY --from=react /frontend/build /app/src/main/resources/static
-# Generamos el JAR de Spring Boot
-RUN mvn clean package spring-boot:repackage
-
-# Llevamos los archivos generados a un contener limpio con java
-FROM openjdk:8
-# Usamos la carpeta app
-WORKDIR /app
-# Copiamos la version ya compilada de React
-COPY --from=spring /app/target/springboottest-1.0.0-SNAPSHOT.jar .
-# Ejecutamos el contenedor
-CMD ["java", "-jar", "springboottest-1.0.0-SNAPSHOT.jar"]
+# production environment
+FROM nginx:stable-alpine
+COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import './CrudMaintainer.css';
 import { forwardRef } from 'react';
 import Avatar from 'react-avatar';
 import Grid from '@material-ui/core/Grid'
@@ -46,7 +46,7 @@ const tableIcons = {
 };
 
 
-const App = () => {
+const CrudMaintainer = () => {
 
   const columns = [
     { title: "id", field: "id", hidden: true },
@@ -56,10 +56,13 @@ const App = () => {
     { title: "Profesión", field: "profesion" },
     { title: "email", field: "email" }
   ]
-  const [data, setData] = useState([]); //table data
-  const [isFetching, setIsFetching] = useState(true); //table data
+  const [data, setData] = useState([]); 
+  const [isFetching, setIsFetching] = useState(true); 
+  const [okMessage,setOkMessage] = useState(true); 
 
-  //for error handling
+  
+
+  //Error handling
   const [isError, setIsError] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
   const [open, setOpen] = React.useState(false);
@@ -115,7 +118,9 @@ const App = () => {
           dataUpdate[index] = newData;
           setData([...dataUpdate]);
           resolve()
-          setIsError(false)
+          setIsError(false);
+          setOpen(true);
+          setOkMessage('Registro actualizado');
           setErrorMessages([])
         })
         .catch(err => {
@@ -159,7 +164,9 @@ const App = () => {
           setData(dataToAdd);
           resolve()
           setErrorMessages([])
-          setIsError(false)
+          setIsError(false);
+          setOpen(true);
+          setOkMessage('Registro agregado.');
         })
         .catch(err => {
           setErrorMessages(["Error de servidor intentando crear."])
@@ -191,6 +198,8 @@ const App = () => {
         const index = tableData.id;
         dataDelete.splice(index, 1);
         setData([...dataDelete]);
+        setOpen(true);
+        setOkMessage('Registro eliminado.');
         resolve()
       })
       .catch(err => {
@@ -206,7 +215,7 @@ const App = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={2}></Grid>
-        <Grid item xs={8}>
+        <Grid item xs={12} md={8}>
           <MaterialTable
             className="user-table"
             title="Lista de usuarios de API Clever"
@@ -242,17 +251,21 @@ const App = () => {
       </Grid>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
 
-        {isError &&
+        {isError ?
           <Alert severity="error" onClose={handleClose} >
             {errorMessages.map((msg, i) => {
               return <div key={i}>{msg}</div>
             })}
-          </Alert>
+          </Alert> :
+          <Alert severity="success" onClose={handleClose} >
+             <div >{okMessage}</div>
+        </Alert>
         }
+        
 
       </Snackbar>
     </div>
   );
 }
 
-export default App;
+export default CrudMaintainer;
