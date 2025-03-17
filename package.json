@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^7.2.1",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
-    "material-table": "^1.59.0",
+    "material-table": "^1.69.3",
     "react": "^16.13.1",
     "react-avatar": "^3.9.6",
     "react-dom": "^16.13.1",
